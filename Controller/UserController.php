@@ -25,9 +25,50 @@
                 case 'search':
                     $this->chercherUser($mot);
                     break;
+                case 'login':
+                    if($_POST){  // if($_POST!=[])  ou if(!empty($_POST))
+                        $this->valider($_POST);
+                    }
+                    $this->seConnecter();
+                    break;
+                case 'logout':
+                    $this->seDeconnecter();
+                    break;
             }
         }
         /*------------------Les Methods------------------------*/
+
+        function seDeconnecter(){
+            session_destroy();
+            header('location:accueil');
+            exit;
+        }
+        function valider($data){
+            $um=new UserManager();
+            extract($data);
+            $connexion=$um->connexion();
+            $sql="select * from user where username=? and password=?";
+            $requete=$connexion->prepare($sql);
+            $requete->execute([$username,sha1($password)]);
+            $user =$requete->fetch(PDO::FETCH_ASSOC);
+            if($user){
+                $_SESSION['username']=$user['username'];
+                $_SESSION['roles']=$user['roles'];
+                $_SESSION['bg_navbar']="bg_green";
+                //---Redirection vers l'accueil
+
+                header('location:accueil');
+                exit();
+            }else{
+                echo "<h1>Identifant et ou mot de passe incorrect </h1>";
+                die;
+            }
+        }
+        function seConnecter(){
+            $file="View/user/formLogin.html.php";
+            $this->generatePage($file);
+
+        }
         function chercherUser($mot){
             $um=new UserManager();
             $columnLikes=['username'];
@@ -146,7 +187,7 @@
                 //-----Afficher roles en menu deroulant----
                 $roles=json_decode($user->getRoles());  ///   tansformer un json en tableau php.  Et json_encode c'est la taransfomation d'un tableai php en json
                 $role_title=implode(" - ",$roles); // transformer le tableau $roles en texte avec un separateur " - "
-                $user_roles="<select class='form-select bg_blue'     title='$role_title'  > ";
+                $user_roles="<select class='form-select bg_green'     title='$role_title'  > ";
                 foreach($roles as $role){
                     $user_roles.="<option>$role</option>";
                 }
