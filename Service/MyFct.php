@@ -1,6 +1,15 @@
 <?php
  
 class MyFct{
+    static function isGranted($role_libelle){
+        $user_roles=$_SESSION['roles']; //   en format json
+        $user_roles=json_decode($user_roles);  // transformation en tableau php
+        if(in_array($role_libelle,$user_roles)){  // tester si $role_libelle fait parti des roles de l'utilisateur en cours
+            return true;
+        }else{
+            return false;
+        }
+    }
     
     function generatePage($file,$variables=[],$base="View/base-bs.html.php"){  // generation d'une page
         // $file  : fichier html

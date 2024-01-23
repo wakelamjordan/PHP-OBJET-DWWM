@@ -40,35 +40,41 @@
             <div class="collapse navbar-collapse justify-content-between" id="nav">
                 <ul class="navbar-nav px-2">
                     <li class="nav-item"><a href="accueil" class="nav-link text-light fw-bold">Accueil</a></li>
-                    <li class="nav-item"><a href="article" class="nav-link text-light fw-bold">Article</a></li>
-                    <li class="nav-item"><a href="article-ajax.php" class="nav-link text-light fw-bold">Article-Ajax</a>
-                    </li>
-                    <li class="nav-item"><a href="client" class="nav-link text-light fw-bold">Client</a></li>
-                    <li class="nav-item dropdown"><a href="" class="nav-link text-light fw-bold dropdown-toggle"
-                            data-bs-toggle="dropdown" data-bs-auto-close="outside">Commande</a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item"><a href="" class="nav-link text-primary">Devis</a></li>
-                            <li class="nav-item"><a href="" class="nav-link text-primary">Facture</a></li>
-                            <li class="nav-item dropend"><a href="" class="nav-link text-primary dropdown-toggle"
-                                    data-bs-toggle="dropdown">Livraison</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item"><a href="" class="nav-link">Domicile</a></li>
-                                    <li class="nav-item"><a href="" class="nav-link">Magasin</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
+                    <?php  if(MyFct::isGranted('ROLE_DEPOT')): ?>
+                        <li class="nav-item"><a href="article" class="nav-link text-light fw-bold">Article</a></li>
+                        <li class="nav-item"><a href="article-ajax.php" class="nav-link text-light fw-bold">Article-Ajax</a>
+                        </li>
+                        <li class="nav-item"><a href="client" class="nav-link text-light fw-bold">Client</a></li>
+                    <?php endif; ?>
+                    <?php  if(MyFct::isGranted('ROLE_CAISSE')): ?>
+                        <li class="nav-item dropdown"><a href="" class="nav-link text-light fw-bold dropdown-toggle"
+                                data-bs-toggle="dropdown" data-bs-auto-close="outside">Commande</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a href="" class="nav-link text-primary">Devis</a></li>
+                                <li class="nav-item"><a href="" class="nav-link text-primary">Facture</a></li>
+                                <li class="nav-item dropend"><a href="" class="nav-link text-primary dropdown-toggle"
+                                        data-bs-toggle="dropdown">Livraison</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item"><a href="" class="nav-link">Domicile</a></li>
+                                        <li class="nav-item"><a href="" class="nav-link">Magasin</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
                     <!-- <li class="nav-item"><a href="user" class="nav-link text-light fw-bold">User</a></li> -->
                     <!-- <li class="nav-item"><a href="" class="nav-link text-light fw-bold">Parametre</a></li> -->
-                    <li class="nav-item dropdown"><a href="" class="nav-link text-primary text-light fw-bold dropdown-toggle"
-                            data-bs-toggle="dropdown">Parametre</a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item"><a href="user" class="nav-link">User</a></li>
-                            <li class="nav-item"><a href="role" class="nav-link">Role</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a href="user&action=login" class="nav-link text-light fw-bold">Se connecter</a></li>
-                    <li class="nav-item"><a href="user&action=logout" class="nav-link text-light fw-bold">Se deconnecter</a></li>
+                    <?php if(MyFct::isGranted('ROLE_ADMIN')): ?>
+                        <li class="nav-item dropdown"><a href="" class="nav-link text-primary text-light fw-bold dropdown-toggle"
+                                data-bs-toggle="dropdown">Parametre</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a href="user" class="nav-link">User</a></li>
+                                <li class="nav-item"><a href="role" class="nav-link">Role</a></li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
+                    <!-- <li class="nav-item"><a href="user&action=login" class="nav-link text-light fw-bold">Se connecter</a></li> -->
+                    <!-- <li class="nav-item"><a href="user&action=logout" class="nav-link text-light fw-bold">Se deconnecter</a></li> -->
 
                 </ul>
                 <div action="">
@@ -87,13 +93,24 @@
                             <li class="nav-item p-2 w-100">Message - 05</li>
                             <li class="nav-item p-2 w-100">Message - 06</li>
                         </ul>
-                        <a href="" class=" dropdown-toggle text-light" data-bs-toggle="dropdown"><i
-                                class="fa fa-user fa-2x"></i>JPB</a>
-                        <ul class="dropdown-menu w100 bg_blue">
-                            <li class="nav-item w100 p-2"><a href="" class="nav-link">Compte</a></li>
-                            <li class="nav-item w100 p-2"><a href="" class="nav-link">Changement mot de passe</a></li>
-                            <li class="nav-item w100 p-2"><a href="" class="nav-link">Deconnexion</a></li>
-                        </ul>
+
+                        <?php if($_SESSION['username']!='user'): ?>          
+                            <a href="" class=" dropdown-toggle text-light" data-bs-toggle="dropdown"><i
+                                    class="fa fa-user fa-2x"></i><?=$_SESSION['username']?></a>
+                            <ul class="dropdown-menu w100 bg_blue">
+                                <li class="nav-item w100 p-2"><a href="" class="nav-link">Compte</a></li>
+                                <li class="nav-item w100 p-2"><a href="" class="nav-link">Changement mot de passe</a></li>
+                                <li class="nav-item w100 p-2"><a href="user&action=logout" class="nav-link">Deconnexion</a></li>
+                            </ul>
+                        <?php else :?>
+                            <a href="" class=" dropdown-toggle text-light" data-bs-toggle="dropdown"><i
+                                    class="fa fa-user fa-2x"></i>Visiteur</a>
+                            <ul class="dropdown-menu w100 bg_blue">
+                                <li class="nav-item w100 p-2"><a href="user&action=login" class="nav-link">Se connecter</a></li>
+                                <li class="nav-item w100 p-2"><a href="" class="nav-link">S'inscrire</a></li>
+                            </ul>
+                        <?php endif; ?>
+
                     </div>
 
                 </div>

@@ -47,9 +47,9 @@
             $um=new UserManager();
             extract($data);
             $connexion=$um->connexion();
-            $sql="select * from user where username=? and password=?";
+            $sql="select * from user where (username=? or email=?)  and password=?";
             $requete=$connexion->prepare($sql);
-            $requete->execute([$username,sha1($password)]);
+            $requete->execute([$username,$username,sha1($password)]);  // le premier $username est pour username=? et le 2ème pour email=?
             $user =$requete->fetch(PDO::FETCH_ASSOC);
             if($user){
                 $_SESSION['username']=$user['username'];
@@ -60,8 +60,16 @@
                 header('location:accueil');
                 exit();
             }else{
-                echo "<h1>Identifant et ou mot de passe incorrect </h1>";
-                die;
+                $message="<div class='center'>";
+                $message.= "<p>Identifant et ou mot de passe incorrect <p>";
+                $message.="<img src='Public/img/giphy.gif' class='img-fluid radius_50' width='25%' >";
+                $message.="</div>";
+
+                $variables=[
+                    'message'=>$message,
+                ];
+                $file="View/erreur/erreur.html.php";
+                $this->generatePage($file,$variables);
             }
         }
         function seConnecter(){

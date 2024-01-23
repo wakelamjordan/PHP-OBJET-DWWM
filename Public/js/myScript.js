@@ -4,10 +4,10 @@ function popupCenter(url, title, w, h) {
     return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
 }
 
-function previewImage(elt,id_affiche_image){
-    var picture=elt.files[0];
-    if(picture){
-        var image=document.getElementById(id_affiche_image);
-        image.src=URL.createObjectURL(picture);
+function previewImage(event,id_image){
+    const image=event.target.files[0];
+    if(image){
+        const elt_image=document.getElementById(id_image);
+            elt_image.src=URL.createObjectURL(image);
     }
 }

@@ -1,11 +1,9 @@
 <?php
     require_once("Service/extra.php");
     spl_autoload_register('charger');
-    $cm=new ClientManager();
-    $columnLikes=['numClient','nomClient','adresseClient'];
-    $mot="er";
-    $clients=$cm->search($columnLikes,$mot);
-    MyFct::sprintr($clients);
+    $m=new Manager();
+    $clients=$m->findAllByConditionTable('client');
+    MyFct::sprintr($clients);die;
 
     // $cm=new ClientManager;
     // $data=[

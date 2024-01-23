@@ -13,7 +13,10 @@
 .ml10{margin-left:10% !important;}
 .ml20{margin-left:20% !important;}
 .ml30{margin-left:30% !important;}
-
+/*------------User -----*/
+.radius-10{border-radius:10px;}
+.radius_50{border-radius:50%;}
+.shadow-white{box-shadow: 10px 10px 10px white;}
 /*-----------------------ECF--------------------*/
 @media print{
     nav, footer{
@@ -156,6 +159,10 @@
 .lab30{float:left;width:30%; font-weight: bold;}
 .lab20{float:left;width:20%;font-weight: bold;}
 @media screen and (max-width:750px){
+    .form-line-input{
+        display:flex;
+        flex-direction: column;
+    }
     .form-controlput{
         display:flex;
         flex-direction: column;

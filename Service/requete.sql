@@ -43,6 +43,10 @@ insert into role (rang,libelle) values
 ('003','ROLE_DEV'),
 ('004','ROLE_USER');
 
+insert into role (rang,libelle) values 
+('003','ROLE_DEPOT'),
+('003','ROLE_CAISSE');
+
 MariaDB [dwwm]> select * from role;
 +----+------+----------------+
 | id | rang | libelle        |
