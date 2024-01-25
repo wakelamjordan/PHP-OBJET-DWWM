@@ -107,7 +107,7 @@
                                     class="fa fa-user fa-2x"></i>Visiteur</a>
                             <ul class="dropdown-menu w100 bg_blue">
                                 <li class="nav-item w100 p-2"><a href="user&action=login" class="nav-link">Se connecter</a></li>
-                                <li class="nav-item w100 p-2"><a href="" class="nav-link">S'inscrire</a></li>
+                                <li class="nav-item w100 p-2"><a href="user&action=insert" class="nav-link">S'inscrire</a></li>
                             </ul>
                         <?php endif; ?>
 

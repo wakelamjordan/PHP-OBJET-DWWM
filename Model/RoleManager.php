@@ -1,5 +1,11 @@
 <?php
 class RoleManager extends Manager{
+    public function findAllByCondition($dataCondition=[],$order='',$type='obj'){
+        return $this->findAllByConditionTable('role',$dataCondition,$order,$type);
+    }
+    public function findOneByCondition($dataCondition=[],$type='obj'){
+        return $this->findOneByConditionTable('role',$dataCondition,$type);
+    }
     public function search($columnLikes,$mot){
         return $this->searchTable('role',$columnLikes,$mot);
     }

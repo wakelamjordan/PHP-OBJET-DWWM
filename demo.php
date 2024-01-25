@@ -2,16 +2,11 @@
     require_once("Service/extra.php");
     spl_autoload_register('charger');
     $m=new Manager();
-    $clients=$m->findAllByConditionTable('client');
-    MyFct::sprintr($clients);die;
-
-    // $cm=new ClientManager;
-    // $data=[
-    //     "id"=>5,
-    //     "numClient"=>"CLT4588",
-    //     "nomClient"=>"Dupont+++++++",
-    //     "adresseClient"=>"Niort"
-    // ];
-    // $id=5;
-
-    // $cm->update($data,$id);
+    $dataCondition=[
+        'numClient'=>'CT10654',
+        'nomClient'=>'Marie',
+    ];
+    $client1=$m->findAllByConditionTable('client',[],' order by nomClient ');
+    printr($client1);
+    $client2=$m->findOneByConditionTable('client');  //  Recherche sans condition 
+    printr($client2);

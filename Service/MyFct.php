@@ -1,6 +1,25 @@
 <?php
  
 class MyFct{
+    function notGranted($role_libelle){
+        $granted=self::isGranted($role_libelle);  // comme isGranted est static alors on utilise self:: au lieu de $this->
+        if($granted){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    function throwMessage($message){
+        $variables=['message'=>$message];
+        $file="View/erreur/erreur.html.php";
+        $this->generatePage($file,$variables);
+    }
+    function crypter($password,$iteration=127){  // on a mis par defaut $iteration à 127
+        for($i=0;$i<=$iteration;$i++){  // boucle qui commence par $i=0 et se termine à $i=$iteration avec une incrementation de 1 ($i++)
+            $password=sha1($password);   // On applique le sha1 sur $password à chaque iteration
+        }
+        return $password;
+    }
     static function isGranted($role_libelle){
         $user_roles=$_SESSION['roles']; //   en format json
         $user_roles=json_decode($user_roles);  // transformation en tableau php

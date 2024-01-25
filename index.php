@@ -16,8 +16,12 @@
     if(file_exists($fileController)){  // On teste l'existance du fichier representé par $fileController
         $x=new $nameController();  // cas où le fichier existe
     }else{
-        echo "<h1>Le fichier $fileController n'existe pas!!!!!</h1>";  // cas où le fichier n'existe pas.
-        die;
+        $myFct=new MyFct;
+        $file="View/erreur/erreur.html.php";
+        $message="Le fichier $fileController n'existe pas!";
+        $variables=['message'=>$message];
+        $myFct->generatePage($file,$variables);
+        // echo "<h1>Le fichier $fileController n'existe pas!</h1>";die;
     }
 
     

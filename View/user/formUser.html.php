@@ -29,17 +29,18 @@
                 <?php endforeach; ?>
             </select>
         </div> -->
+        <?php if(MyFct::isGranted('ROLE_ADMIN')): ?>
+            <div class="my-4">
+                <label for="" class="lab30">ROLES</label>
+                <ul class="ml30 p-0">
+                    <?php foreach($roles as $role) : ?>
+                    <li><input type="checkbox" name="roles[]" value="<?=$role['libelle']?>" <?=$role['checked']?>>
+                        <?=$role['libelle']?> </li>
 
-        <div class="my-4">
-            <label for="" class="lab30">ROLES</label>
-            <ul class="ml30 p-0" >
-                <?php foreach($roles as $role) : ?>
-                    <li><input type="checkbox" name="roles[]" value="<?=$role['libelle']?>"    <?=$role['checked']?>  >   <?=$role['libelle']?> </li>
-
-                <?php endforeach; ?>
-            </ul>
-        </div>
-
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
         <div class="div-btn">
             <a href="user" class="btn btn-md btn-success">Retour à la liste</a>
             <input type="reset" class="btn btn-md btn-danger" value="Annuler" <?=$disabled?>>

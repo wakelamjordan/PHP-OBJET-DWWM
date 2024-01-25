@@ -1,25 +1,31 @@
 <?php
     class UserController extends MyFct{
         function __construct(){
+            
             $action='list';
             extract($_GET);
             switch($action){
                 case 'list':
+                    if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
                     $this->listerUser();
                     break;
                 case 'insert':
                     $this->insererUser();
                     break;
                 case 'update':
+                    if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
                     $this->modifierUser($id);
                     break;
                 case 'show':
+                    if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
                     $this->afficherUser($id);
                     break;
                 case 'delete':
+                    if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
                     $this->supprimerUser($id);
                     break;
                 case 'save' :
+                    //if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
                     $this->sauvegarderUser($_POST);
                     break;
                 case 'search':
@@ -46,14 +52,22 @@
         function valider($data){
             $um=new UserManager();
             extract($data);
-            $connexion=$um->connexion();
-            $sql="select * from user where (username=? or email=?)  and password=?";
-            $requete=$connexion->prepare($sql);
-            $requete->execute([$username,$username,sha1($password)]);  // le premier $username est pour username=? et le 2ème pour email=?
-            $user =$requete->fetch(PDO::FETCH_ASSOC);
+            // $connexion=$um->connexion();
+            // $sql="select * from user where (username=? or email=?)  and password=?";
+            // $requete=$connexion->prepare($sql);
+            // $requete->execute([$username,$username,$this->crypter($password)]);  // le premier $username est pour username=? et le 2ème pour email=?
+            // $user =$requete->fetch(PDO::FETCH_ASSOC);
+            $dataCondition=['username'=>$username,'password'=>$this->crypter($password)];
+            // $user=$um->findOneByCondition($dataCondition,'array');
+            $user=$um->findOneByCondition($dataCondition);
+            if(!$user->getUsername()){  // La recherche sur username s'est averée fausse alors on tente la recherche sur email
+                $dataCondition=['email'=>$username,'password'=>$this->crypter($password)];
+                $user=$um->findOneByCondition($dataCondition);                
+            }
+
             if($user){
-                $_SESSION['username']=$user['username'];
-                $_SESSION['roles']=$user['roles'];
+                $_SESSION['username']=$user->getUsername(); //$user['username'];
+                $_SESSION['roles']=$user->getRoles(); //$user['roles'];
                 $_SESSION['bg_navbar']="bg_green";
                 //---Redirection vers l'accueil
 
@@ -161,7 +175,7 @@
             $um=new UserManager();
             $connexion=$um->connexion();
             $data['roles']=json_encode($data['roles']); // tranformer le condetune de $data['roles'] en json
-            $data['password']=sha1($data['password']); //  crypter le mode passe
+            $data['password']=$this->crypter($data['password']); //  crypter le mode passe
             
            // $this->printr($data);die;
             extract($data);
@@ -182,6 +196,14 @@
         }
 
         function listerUser(){
+            //-----------protection
+            // if(this->notGranted('ROLE_ADMIN')){
+            //     $this->throwMessage("Von'avez pas <br> le droit d'utiliser cette action!");
+            // }
+            // if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
+            // On a ici un if sans accolade car on n'a qu'une seule  ligne d'instruction
+
+
             /*-------------Préparation des variables à envoyer à la page--- */
             $um=new UserManager();
             $users=$um->findAll();
