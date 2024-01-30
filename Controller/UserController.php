@@ -25,8 +25,10 @@
                     $this->supprimerUser($id);
                     break;
                 case 'save' :
+                    // $this->printr($_POST);
+                    // $this->printr($_FILES);die;         
                     //if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
-                    $this->sauvegarderUser($_POST);
+                    $this->sauvegarderUser($_POST,$_FILES);
                     break;
                 case 'search':
                     $this->chercherUser($mot);
@@ -43,7 +45,44 @@
             }
         }
         /*------------------Les Methods------------------------*/
-
+        function sauvegarderUser($data,$files=[]){
+            // $this->printr($files);die;
+            if($files['photo']['name']){  // verifier si $files['photo']['name'] n'est pas vide
+                // echo 'on est ici'; die;
+                $file_photo=$files['photo'];  // $_FILES['photo']
+                $name=$file_photo['name'];  //  recuperer le nom du fichier uploadé avec son extension
+                $source=$file_photo['tmp_name'];  // recuperer le chemin temporaire de l'emplacement du fichier uploadé
+                $destination="Public/upload/$name";  // le chemin  où on va stocker le fichier
+                move_uploaded_file($source,$destination);  // deplacer le ficher temporaire vers la destination
+                $data['photo']=$name;
+            }else{
+                $file_photo=[
+                    'name'=>'',
+                    'tmp_name'=>'',
+                ];
+                unset($data['name']); // supprimer l'element à l'indice 'name' dans $data           }
+             }
+             $um=new UserManager();
+             $connexion=$um->connexion();
+             $data['roles']=json_encode($data['roles']); // tranformer le condetune de $data['roles'] en json
+             $data['password']=$this->crypter($data['password']); //  crypter le mode passe
+            // $this->printr($data);die;
+             extract($data);
+             $id=(int) $id;  // transformation de $id en entier
+             if($id!=0){  // cas d'une modification
+                 // $sql="update user set numUser=?,nomUser=?,adresseUser=? where id=?";
+                 // $requete=$connexion->prepare($sql);
+                 // $requete->execute([$numUser,$nomUser,$adresseUser,$id]);
+                 $um->update($data,$id);
+             }else{  //  cas d'une insertion 
+                 // $sql="insert into user (numUser,nomUser,adresseUser) values (?,?,?) ";
+                 // $requete=$connexion->prepare($sql);
+                 // $requete->execute([$numUser,$nomUser,$adresseUser]);
+                 $um->insert($data);
+             }
+             //  Redurection vers la page list user
+             header("location:user");
+         }
         function seDeconnecter(){
             session_destroy();
             header('location:accueil');
@@ -138,6 +177,11 @@
             $this->generateFormUser($user,$disabled);
         }  
         function generateFormUser($user,$disabled){
+            $photo=$user->getPhoto();
+            if(!$photo){
+                $photo="photo.jpg";  //  l'iage photo.jpg doit etre créer
+            }
+            
             $user_roles=$user->getRoles();
             //MyFct::printr($user_roles);die;
             $rm=new RoleManager();
@@ -156,6 +200,7 @@
                 $roles[]=['libelle'=>$libelle,'selected'=>$selected,'checked'=>$checked];
             }
             //---------prearation variables---
+
             $variables=[
                 'id'=>$user->getId(),
                 'username'=>$user->getUsername(),
@@ -163,37 +208,15 @@
                 'email'=>$user->getEmail(),
                 'roles'=>$roles,
                 'disabled'=>$disabled,
+                'photo' =>$photo,
             ];
+            //printr($variables);die;
             //----Ouverture de la page
             $file="View/user/formUser.html.php";
             $this->generatePage($file,$variables);
 
         }                
-        function sauvegarderUser($data){
-           // $this->printr($data);die;
-           
-            $um=new UserManager();
-            $connexion=$um->connexion();
-            $data['roles']=json_encode($data['roles']); // tranformer le condetune de $data['roles'] en json
-            $data['password']=$this->crypter($data['password']); //  crypter le mode passe
-            
-           // $this->printr($data);die;
-            extract($data);
-            $id=(int) $id;  // transformation de $id en entier
-            if($id!=0){  // cas d'une modification
-                // $sql="update user set numUser=?,nomUser=?,adresseUser=? where id=?";
-                // $requete=$connexion->prepare($sql);
-                // $requete->execute([$numUser,$nomUser,$adresseUser,$id]);
-                $um->update($data,$id);
-            }else{  //  cas d'une insertion 
-                // $sql="insert into user (numUser,nomUser,adresseUser) values (?,?,?) ";
-                // $requete=$connexion->prepare($sql);
-                // $requete->execute([$numUser,$nomUser,$adresseUser]);
-                $um->insert($data);
-            }
-            //  Redurection vers la page list user
-            header("location:user");
-        }
+
 
         function listerUser(){
             //-----------protection

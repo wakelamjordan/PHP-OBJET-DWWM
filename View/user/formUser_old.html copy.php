@@ -1,6 +1,6 @@
 <div class="m-auto w80 my-4">
     <h1 class="titre text-light">SAISIE USER</h1>
-    <form action="user&action=save" method='post' enctype="multipart/form-data">
+    <form action="user&action=save" method='post'>
 
         <div class="my-2 hidden">
             <label for="id" class="lab30">ID</label>
@@ -10,11 +10,6 @@
             <label for="username" class="lab30 obligatoire">USERNAME</label>
             <input required class="form-control w20" type="text" id='username' name="username" value="<?=$username?>"
                 <?=$disabled?>>
-        </div>
-        <div class="my-2">
-            <label for="photo" class="lab30 ">PHOTO</label>
-            <img id='image_view' src="Public/upload/<?=$photo?>" width="20%" class="img-fluid" >
-            <input  class="ml30"  type="file" id='photo' name="photo" value=""    onChange="previewImage(event,'image_view')"   <?=$disabled?>  >            
         </div>
         <div class="my-2">
             <label for="email" class="lab30">E-MAIL</label>

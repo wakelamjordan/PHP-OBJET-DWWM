@@ -1,3 +1,6 @@
+-----------------Rajout de ka colonne photo dans la table user---
+alter table user add photo varchar(250);
+
 ------------Creation de la table user-----
 create table user (id int auto_increment primary key,
 username varchar(100) not null unique,

@@ -17,6 +17,24 @@
 .radius-10{border-radius:10px;}
 .radius_50{border-radius:50%;}
 .shadow-white{box-shadow: 10px 10px 10px white;}
+/*----------------css dabs base-bs.htm.php---------------*/
+#aside-left,
+#section-bs {
+    min-height: 70vh;
+    margin-top: 10vh;
+}
+
+#section-bs {
+    overflow: auto;
+    position: relative;
+}
+
+@media screen and (max-width:750px) {
+    #aside-left {
+        width: 100%;
+    }
+
+}
 /*-----------------------ECF--------------------*/
 @media print{
     nav, footer{

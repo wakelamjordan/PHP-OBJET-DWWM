@@ -9,26 +9,8 @@
     <link rel="stylesheet" href="./Public/fontawesome-free-6.5.0-web/css/all.css">
     <script src="./Public/bootstrap-5.3.2-dist/js/bootstrap.bundle.js" defer></script>
     <link rel="stylesheet" href="./Public/css/style.css">
+    <script src="Public/js/myScript.js" defer></script>
     <title>Document</title>
-    <style>
-    #aside-left,
-    #section-bs {
-        min-height: 70vh;
-        margin-top: 10vh;
-    }
-
-    #section-bs {
-        overflow: auto;
-        position: relative;
-    }
-
-    @media screen and (max-width:750px) {
-        #aside-left {
-            width: 100%;
-        }
-
-    }
-    </style>
 </head>
 
 <body>
@@ -95,8 +77,8 @@
                         </ul>
 
                         <?php if($_SESSION['username']!='user'): ?>          
-                            <a href="" class=" dropdown-toggle text-light" data-bs-toggle="dropdown"><i
-                                    class="fa fa-user fa-2x"></i><?=$_SESSION['username']?></a>
+                            <a href="" class=" dropdown-toggle text-light" data-bs-toggle="dropdown">
+                                <i class="fa fa-user fa-2x"></i><?=$_SESSION['username']?></a>
                             <ul class="dropdown-menu w100 bg_blue">
                                 <li class="nav-item w100 p-2"><a href="" class="nav-link">Compte</a></li>
                                 <li class="nav-item w100 p-2"><a href="" class="nav-link">Changement mot de passe</a></li>
