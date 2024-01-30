@@ -28,6 +28,7 @@
                     // $this->printr($_POST);
                     // $this->printr($_FILES);die;         
                     //if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
+                    
                     $this->sauvegarderUser($_POST,$_FILES);
                     break;
                 case 'search':
@@ -45,6 +46,53 @@
             }
         }
         /*------------------Les Methods------------------------*/
+        function listerUser(){
+            //-----------protection
+            // if(this->notGranted('ROLE_ADMIN')){
+            //     $this->throwMessage("Von'avez pas <br> le droit d'utiliser cette action!");
+            // }
+            // if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
+            // On a ici un if sans accolade car on n'a qu'une seule  ligne d'instruction
+
+
+            /*-------------Préparation des variables à envoyer à la page--- */
+            $um=new UserManager();
+            $users=$um->findAll();
+            $lignes=[];
+            foreach($users as $value){
+                //$dateCreation=$value['dateCreation']
+                $user=new User($value);
+                $dateCreation=$user->getDateCreation();
+                $dateCreation=new DateTime($dateCreation);
+                $dateCreation=$dateCreation->format('d/m/Y');
+                //-----Afficher roles en menu deroulant----
+                $roles=json_decode($user->getRoles());  ///   tansformer un json en tableau php.  Et json_encode c'est la taransfomation d'un tableai php en json
+                $role_title=implode(" - ",$roles); // transformer le tableau $roles en texte avec un separateur " - "
+                $user_roles="<select class='form-select bg_green'     title='$role_title'  > ";
+                foreach($roles as $role){
+                    $user_roles.="<option>$role</option>";
+                }
+                $user_roles.="</select>";
+                $photo=$user->getPhoto();  // recuperation de photo dans user
+                $photo=(!$photo)? 'photo.jpg': $photo;  // si $photo est vide alors prendre comme valeur 'photo.jpg' sinon garder $photo
+                //----
+                $lignes[]=[
+                    'id'=>$user->getId(),
+                    'username'=>$user->getUsername(),
+                    'dateCreation'=>$dateCreation,
+                    'roles'=>$user_roles,
+                    'photo'=>$photo,
+                ];
+            }
+            $variables=[
+                'lignes'=>$lignes,
+                'nbre'=>count($lignes),
+            ];
+            //------------Evoi page-------------*/
+            $file="View/user/listUser.html.php";
+            $this->generatePage($file,$variables);
+
+        }        
         function sauvegarderUser($data,$files=[]){
             // $this->printr($files);die;
             if($files['photo']['name']){  // verifier si $files['photo']['name'] n'est pas vide
@@ -56,16 +104,18 @@
                 move_uploaded_file($source,$destination);  // deplacer le ficher temporaire vers la destination
                 $data['photo']=$name;
             }else{
-                $file_photo=[
-                    'name'=>'',
-                    'tmp_name'=>'',
-                ];
                 unset($data['name']); // supprimer l'element à l'indice 'name' dans $data           }
              }
              $um=new UserManager();
              $connexion=$um->connexion();
              $data['roles']=json_encode($data['roles']); // tranformer le condetune de $data['roles'] en json
-             $data['password']=$this->crypter($data['password']); //  crypter le mode passe
+             $password=$data['password'];
+             if($password){  //  tester si $password n'est ni vide ni null ni egal à 0
+                 $password=$this->crypter($password);
+                 $data['password']=$password;
+             }else{  // $password est vide ou  null ou égal à 0
+                 unset($data['password']);  // enlever dans les elements à modifier password pour que mysql ne modifie pas à vide le contenu de password
+             }
             // $this->printr($data);die;
              extract($data);
              $id=(int) $id;  // transformation de $id en entier
@@ -103,13 +153,12 @@
                 $dataCondition=['email'=>$username,'password'=>$this->crypter($password)];
                 $user=$um->findOneByCondition($dataCondition);                
             }
-
-            if($user){
+            //printr($user);die;
+            if($user->getUsername()){
                 $_SESSION['username']=$user->getUsername(); //$user['username'];
                 $_SESSION['roles']=$user->getRoles(); //$user['roles'];
                 $_SESSION['bg_navbar']="bg_green";
                 //---Redirection vers l'accueil
-
                 header('location:accueil');
                 exit();
             }else{
@@ -218,51 +267,7 @@
         }                
 
 
-        function listerUser(){
-            //-----------protection
-            // if(this->notGranted('ROLE_ADMIN')){
-            //     $this->throwMessage("Von'avez pas <br> le droit d'utiliser cette action!");
-            // }
-            // if($this->notGranted('ROLE_ADMIN')) $this->throwMessage("Vous n'avez pas <br> le droit d'utiliser cette action!"); 
-            // On a ici un if sans accolade car on n'a qu'une seule  ligne d'instruction
 
-
-            /*-------------Préparation des variables à envoyer à la page--- */
-            $um=new UserManager();
-            $users=$um->findAll();
-            $lignes=[];
-            foreach($users as $value){
-                //$dateCreation=$value['dateCreation']
-                $user=new User($value);
-                $dateCreation=$user->getDateCreation();
-                $dateCreation=new DateTime($dateCreation);
-                $dateCreation=$dateCreation->format('d/m/Y');
-                //-----Afficher roles en menu deroulant----
-                $roles=json_decode($user->getRoles());  ///   tansformer un json en tableau php.  Et json_encode c'est la taransfomation d'un tableai php en json
-                $role_title=implode(" - ",$roles); // transformer le tableau $roles en texte avec un separateur " - "
-                $user_roles="<select class='form-select bg_green'     title='$role_title'  > ";
-                foreach($roles as $role){
-                    $user_roles.="<option>$role</option>";
-                }
-                $user_roles.="</select>";
-
-                //----
-                $lignes[]=[
-                    'id'=>$user->getId(),
-                    'username'=>$user->getUsername(),
-                    'dateCreation'=>$dateCreation,
-                    'roles'=>$user_roles,
-                ];
-            }
-            $variables=[
-                'lignes'=>$lignes,
-                'nbre'=>count($lignes),
-            ];
-            //------------Evoi page-------------*/
-            $file="View/user/listUser.html.php";
-            $this->generatePage($file,$variables);
-
-        }
 
 
 

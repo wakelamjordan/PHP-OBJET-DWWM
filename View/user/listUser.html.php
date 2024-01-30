@@ -7,17 +7,21 @@
     <table class="w100 table-responsive">
         <thead id="thead_user">
             <tr class="bg_green">
-                <td>ID</td>
-                <td>USERNAME</td>
-                <td>DATECREATION</td>
-                <td>ROLES</td>
-                <td>ACTIONS</td>
+                <td class="w10 center">ID</td>
+                <td class="w10 center">PHOTO</td>
+                <td class="w10 center">DOWNLOAD</td>                                
+                <td class="w20 center">USERNAME</td>
+                <td class="w10 center">DATE <br> CREATION</td>
+                <td class="w20 center">ROLES</td>
+                <td class="w20 center">ACTIONS</td>
             </tr>
         </thead>
         <tbody id="tbody_user">
             <?php foreach($lignes as $ligne): ?>
                 <tr>
                     <td><?=$ligne['id']?></td>
+                    <td class="center" ><img src="Public/upload/<?=$ligne['photo']?>" width="50%" class="img-fluid zoom" ></td>
+                    <td><a href="Public/upload/<?=$ligne['photo']?>"  download >Télécharger</a></td>
                     <td><?=$ligne['username']?></td>
                     <td><?=$ligne['dateCreation']?></td>
                     <td class="py-2"><?=$ligne['roles']?></td>
