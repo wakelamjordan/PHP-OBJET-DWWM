@@ -31,8 +31,8 @@ class ArticleManager extends Manager{
     public function deleteById($id){
         $this->deleteByIdTable('article',$id);
     }
-    public function findAll(){
-        $resultat=$this->listTable('article');
+    public function findAll($order=''){
+        $resultat=$this->listTable('article',$order);
         return $resultat;
     }
     public function statisticVente(){

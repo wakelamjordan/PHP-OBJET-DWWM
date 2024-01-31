@@ -31,8 +31,8 @@ class RoleManager extends Manager{
     public function deleteById($id){
         $this->deleteByIdTable('role',$id);
     }
-    public function findAll(){
-        $resultat=$this->listTable('role');
+    public function findAll($order=''){
+        $resultat=$this->listTable('role',$order);
         return $resultat;
     }
     public function statisticVente(){

@@ -31,8 +31,8 @@ class ClientManager extends Manager{
     public function deleteById($id){
         $this->deleteByIdTable('client',$id);
     }
-    public function findAll(){
-        $resultat=$this->listTable('client');
+    public function findAll($order=''){
+        $resultat=$this->listTable('client',$order);
         return $resultat;
     }
     public function statisticVente(){

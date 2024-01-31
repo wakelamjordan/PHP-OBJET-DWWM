@@ -8,14 +8,14 @@
         </div>
         <div class="my-2">
             <label for="username" class="lab30 obligatoire">USERNAME</label>
-            <input required class="form-control w20" type="text" id='username' name="username" value="<?=$username?>"
+            <input required class="form-control w30" type="text" id='username' name="username" value="<?=$username?>"
                 <?=$disabled?>>
         </div>
         <div class="my-2">
             <label for="photo" class="lab30">PHOTO</label>
             <img id="image_view" src="Public/upload/<?=$photo?>" alt="" width="30%" class="img-fluid">
             <input type="file" id="photo" name="photo" class="w50 hidden" onChange="previewImage(event,'image_view')"  >
-            <a href="javascript:choisir()" class="btn btn-lg btn-primary ml30 w30">Choisir une photo</a>
+            <a href="javascript:choisir()" class="btn btn-lg btn-primary ml30 w30 my-2">Choisir une photo</a>
         </div>
 
 

@@ -99,7 +99,8 @@
 
 }
 /* -------------------CSS-MOADAL-AJAX-------------------------------- */
-.hidden{visibility:hidden !important;}
+/* .hidden{visibility:hidden !important;} */
+.hidden{display:none !important;}
 #loader{
     position:absolute;
     top:50%;
@@ -278,6 +279,7 @@
 
 .titre{line-height: 60px;text-align: center;border-bottom:3px solid white;color:navy;}
 
+.w05{width:5%;}
 .w10{width:10%;}
 .w20{width:20%;}
 .w30{width:30%;}
